@@ -1,0 +1,49 @@
+version: '3.8'
+
+services:
+  # ============================================
+  # PostgreSQL - Data Storage
+  # ============================================
+  postgres:
+    image: postgres:16-alpine
+    container_name: logmoni-postgres
+    environment:
+      POSTGRES_DB: logmoni
+      POSTGRES_USER: logmoni_user
+      POSTGRES_PASSWORD: logmoni_secret
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./sql/init.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U logmoni_user -d logmoni"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # ============================================
+  # RabbitMQ - Message Queue
+  # ============================================
+  rabbitmq:
+    image: rabbitmq:3.13-management-alpine
+    container_name: logmoni-rabbitmq
+    environment:
+      RABBITMQ_DEFAULT_USER: logmoni
+      RABBITMQ_DEFAULT_PASS: logmoni_secret
+    ports:
+      - "5672:5672"    # AMQP protocol
+      - "15672:15672"  # Management UI (http://localhost:15672)
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
+      interval: 10s
+      timeout: 10s
+      retries: 5
+
+volumes:
+  postgres_data:
+    driver: local
+  rabbitmq_data:
+    driver: local
