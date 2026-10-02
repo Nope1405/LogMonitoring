@@ -31,6 +31,7 @@ class Settings(BaseSettings):
     class Config:
         env_file = "../.env"
         env_file_encoding = "utf-8"
+        extra = "ignore"  # Ignore VITE_* and other unknown keys from shared .env
 
 
 @lru_cache()

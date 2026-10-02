@@ -46,7 +46,7 @@ class AlertResponse(BaseModel):
     alert_type: str
     severity: str
     message: str
-    metadata: Optional[dict]
+    extra_data: Optional[dict]
     is_resolved: bool
     created_at: datetime
 

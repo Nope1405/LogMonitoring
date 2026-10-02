@@ -3,6 +3,7 @@ Alembic environment configuration.
 Integrates with SQLAlchemy models for auto-migration generation.
 """
 
+import os
 from logging.config import fileConfig
 
 from sqlalchemy import engine_from_config, pool
@@ -14,6 +15,11 @@ from app.models.alert import Alert  # noqa: F401
 
 # Alembic Config object
 config = context.config
+
+# Override sqlalchemy.url from environment variable (for CI/CD)
+db_url = os.environ.get("DATABASE_URL_SYNC")
+if db_url:
+    config.set_main_option("sqlalchemy.url", db_url)
 
 # Setup logging
 if config.config_file_name is not None:

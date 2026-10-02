@@ -161,7 +161,7 @@ class AggregationService:
                 alert_type=row.alert_type,
                 severity=row.severity,
                 message=row.message,
-                metadata=row.metadata,
+                extra_data=row.extra_data,
                 is_resolved=row.is_resolved,
                 created_at=row.created_at,
             )
